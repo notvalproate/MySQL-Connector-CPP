@@ -2,28 +2,30 @@
 #include <iostream>
 #include <conio.h>
 
+//Displays all the contents of a table object.
 void mysqlu::DisplayFullTable(mysqlx::Table& p_Table) {
-	mysqlx::RowResult result = p_Table.select("*").execute();
+	mysqlx::RowResult t_Result = p_Table.select("*").execute(); 
 
-	std::vector<std::string> columnNames;
-	for (const auto& column : result.getColumns()) {
-		columnNames.push_back(column.getColumnLabel());
+	std::vector<std::string> t_ColumnNames;
+	for (const auto& column : t_Result.getColumns()) { 
+		t_ColumnNames.push_back(column.getColumnLabel());
 	}
 
-	for (const auto& columnName : columnNames) {
+	for (const auto& columnName : t_ColumnNames) {
 		std::cout << columnName << "\t";
 	}
 	std::cout << std::endl;
 
-	std::vector<mysqlx::Row> rows = result.fetchAll();
+	std::vector<mysqlx::Row> rows = t_Result.fetchAll();
 	for (const auto& row : rows) {
-		for (size_t i = 0; i < columnNames.size(); i++) { 
+		for (size_t i = 0; i < t_ColumnNames.size(); i++) { 
 			std::cout << row[i] << "\t"; 
 		}
 		std::cout << std::endl; 
 	}
 }
 
+//Reads the password from the windows console, while displaying "*" instead of echoing the password in the console.
 void mysqlu::ReadPassword(std::string& p_Password) {
     int i = 0, x;
     char t_Password[100], ch;
@@ -47,6 +49,7 @@ void mysqlu::ReadPassword(std::string& p_Password) {
     p_Password = t_Password;
 }
 
+//Reads a username and password from the console and returns the session when successful.
 mysqlx::Session mysqlu::Login() {
 	std::string t_Username, t_Password;
 
