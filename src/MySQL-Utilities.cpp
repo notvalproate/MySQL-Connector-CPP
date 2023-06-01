@@ -4,7 +4,15 @@
 
 //Displays all the contents of a table object.
 void mysqlu::DisplayFullTable(mysqlx::Table& p_Table) {
-	mysqlx::RowResult t_Result = p_Table.select("*").execute(); 
+	mysqlx::RowResult t_Result;
+
+	try {
+		t_Result = p_Table.select("*").execute();
+	}
+	catch (mysqlx::Error& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return;
+	}
 
 	std::vector<std::string> t_ColumnNames;
 	for (const auto& column : t_Result.getColumns()) { 
@@ -27,7 +35,7 @@ void mysqlu::DisplayFullTable(mysqlx::Table& p_Table) {
 
 //Reads the password from the windows console, while displaying "*" instead of echoing the password in the console.
 void mysqlu::ReadPassword(std::string& p_Password) {
-    int i = 0, x;
+    int i = 0;
     char t_Password[100], ch;
 
     while (true) {
@@ -39,7 +47,7 @@ void mysqlu::ReadPassword(std::string& p_Password) {
             t_Password[i] = ch;
             i++;
         }
-        else if (ch == 8) {
+        else if (ch == 8 && i > 0) {
             std::cout << "\b \b";
             i--;
         }
